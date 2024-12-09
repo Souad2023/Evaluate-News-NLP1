@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
     entry: './src/client/index.js',
     mode: 'production',
+    stats: 'verbose',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',  
@@ -16,17 +17,24 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: "babel-loader",
+                use: 'babel-loader'
             },
             {
                 test: /\.scss$/,
                 use: [
-                    MiniCssExtractPlugin.loader, 
-                    'css-loader',
-                    'sass-loader'
-                ],
+                    MiniCssExtractPlugin.loader,  
+                    'css-loader',                
+                    'sass-loader'                 
+                ]
             },
-        ],
+            {
+                test: /\.css$/,  
+                use: [
+                    MiniCssExtractPlugin.loader, 
+                    'css-loader'                 
+                ]
+            }
+        ]
     },
     plugins: [
         new HtmlWebPackPlugin({
@@ -34,12 +42,11 @@ module.exports = {
             filename: "./index.html",
         }),
         new MiniCssExtractPlugin({  
-            filename: 'styles.css',
+            filename: 'styles.css',  
         }),
-        new WorkboxPlugin.GenerateSW(), 
+        new WorkboxPlugin.GenerateSW(),  
     ],
-    devServer: {
-        port: 5050,
-        allowedHosts: 'all',
-    },
+    stats: {
+        errorDetails: true  
+    }
 };
